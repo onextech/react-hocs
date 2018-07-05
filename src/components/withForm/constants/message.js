@@ -1,0 +1,8 @@
+export const MESSAGE_SAVE_SUCCESS = 'Save successful'
+export const MESSAGE_SAVE_FAILURE = 'Save failed'
+export const MESSAGE_UPLOAD_SUCCESS = 'Upload successful'
+export const MESSAGE_UPLOAD_FAILURE = 'Upload failed'
+export const MESSAGE_DELETE_SUCCESS = 'Delete successful'
+export const MESSAGE_DELETE_FAILURE = 'Delete failed'
+export const MESSAGE_LOGOUT_SUCCESS = 'Logout successful'
+export const MESSAGE_RESET_PASSWORD_SUCCESS = 'Password reset successful'
