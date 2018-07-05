@@ -25,6 +25,7 @@ module.exports = {
     'react-router-dom': 'react-router-dom',
     'styled-components': 'styled-components',
     'semantic-ui-react': 'semantic-ui-react',
+    'semantic-ui-css': 'semantic-ui-css',
     antd: 'antd',
     'draft-js': 'draft-js',
     moment: 'moment',
