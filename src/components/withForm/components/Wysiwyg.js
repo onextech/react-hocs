@@ -4,6 +4,42 @@ import { Editor } from 'react-draft-wysiwyg'
 import { EditorState, convertToRaw, ContentState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { injectGlobal } from 'styled-components'
+
+/* eslint-disable no-unused-expressions */
+injectGlobal`
+  .app-wysiwyg-wrapper {
+    &.basic {
+      .toolbar {
+        display: flex;
+        margin-bottom: 0;
+        padding: 0;
+        border: 0;
+        > * {
+          margin-bottom: 0;
+        }
+        .rdw-option-wrapper,
+        .rdw-block-wrapper {
+          margin: 0;
+          border: 1px solid lightgray;
+          border-bottom: 0;
+        }
+        .rdw-block-wrapper {
+          padding: 0;
+        }
+      }
+      .editor {
+        border: 1px solid lightgray;
+        padding: .5em 1em;
+        min-height: 10em;
+        line-height: 1.5;
+        background: white;
+      }
+    }
+  }
+`
+/* eslint-enable no-unused-expressions */
 
 let fetch
 let FormData

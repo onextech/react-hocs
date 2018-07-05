@@ -68,6 +68,7 @@ const withFormComponents = compose(
               component: Component,
               form,
               required,
+              props,
               ...rest
             } = fieldProps
             const record = Object.hasOwnProperty.call(form, name) // form must contain this key
@@ -80,7 +81,7 @@ const withFormComponents = compose(
                       <label htmlFor={name}>
                         {startCase(name)}
                       </label>
-                      <Wysiwyg name={name} initialValue={form[name]} onChange={handleChange} />
+                      <Wysiwyg name={name} initialValue={form[name]} onChange={handleChange} {...props} />
                     </Form.Field>
                   )
                 }
@@ -100,6 +101,7 @@ const withFormComponents = compose(
                         onUpload={handleChange}
                         src={form[name]}
                         {...upload}
+                        {...props}
                       />
                     </Form.Field>
                   )

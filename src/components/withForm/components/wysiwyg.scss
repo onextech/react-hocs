@@ -1,0 +1,29 @@
+.app-wysiwyg-wrapper {
+  &.basic {
+    .toolbar {
+      margin-bottom: 0;
+      padding: 0;
+      border: 0;
+      > * {
+        margin-bottom: 0;
+      }
+      .rdw-option-wrapper,
+      .rdw-block-wrapper {
+        margin: 0;
+        border: 1px solid lightgray;
+        border-bottom: 0;
+        padding: 1.1em .7em;
+      }
+      .rdw-block-wrapper {
+        padding: 0;
+      }
+    }
+    .editor {
+      border: 1px solid lightgray;
+      padding: .5em 1em;
+      min-height: 10em;
+      line-height: 1.5;
+      background: white;
+    }
+  }
+}
