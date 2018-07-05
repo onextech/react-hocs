@@ -1,6 +1,6 @@
 {
   "name": "@onextech/react-hocs",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Higher Order Components for react",
   "license": "MIT",
   "repository": "onextech/react-hocs",
@@ -93,7 +93,7 @@
     "styled-components": "^3.3.3",
     "webpack": "^3.10.0"
   },
-  "peerDependencies" : {
+  "peerDependencies": {
     "styled-components": "^3.3.3"
   },
   "scripts": {
