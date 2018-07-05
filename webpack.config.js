@@ -5,7 +5,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    library: 'reactSemanticBooster',
+    library: 'reactHocs',
     libraryTarget: 'umd',
     umdNamedDefine: true,
   },
@@ -23,7 +23,11 @@ module.exports = {
     'react-dom': 'react-dom',
     'prop-types': 'prop-types',
     'react-router-dom': 'react-router-dom',
-    'styled-components': 'styled-components',
+    'styled-components': {
+      commonjs: 'styled-components',
+      commonjs2: 'styled-components',
+      amd: 'styled-components',
+    },
     'semantic-ui-react': 'semantic-ui-react',
     'semantic-ui-css': 'semantic-ui-css',
     antd: 'antd',
