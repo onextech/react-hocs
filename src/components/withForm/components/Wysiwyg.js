@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg'
 import { EditorState, convertToRaw, ContentState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
-import fetch from 'isomorphic-fetch'
+import fetch from 'fetch-everywhere'
 import FormData from 'form-data'
 
 class Wysiwyg extends React.Component {
