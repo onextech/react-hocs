@@ -29,6 +29,7 @@ module.exports = {
     'draft-js': 'draft-js',
     moment: 'moment',
     'query-string': 'query-string',
+    'react-apollo': 'react-apollo',
     lodash: {
       commonjs: 'lodash',
       commonjs2: 'lodash',
