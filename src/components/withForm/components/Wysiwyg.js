@@ -4,8 +4,15 @@ import { Editor } from 'react-draft-wysiwyg'
 import { EditorState, convertToRaw, ContentState } from 'draft-js'
 import draftToHtml from 'draftjs-to-html'
 import htmlToDraft from 'html-to-draftjs'
-import fetch from 'node-fetch'
-import FormData from 'form-data'
+
+let fetch
+let FormData
+/* eslint-disable global-require */
+if (typeof window !== 'undefined') {
+  fetch = require('node-fetch')
+  FormData = require('form-data')
+}
+/* eslint-enable global-require */
 
 class Wysiwyg extends React.Component {
   state = {
@@ -40,25 +47,23 @@ class Wysiwyg extends React.Component {
 
   uploadImage = (file) => {
     const { user: { token }, uploadUrl: UPLOAD_URL } = this.props
-    if (typeof window !== 'undefined') {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const form = new FormData()
-          form.append('file', file)
-          form.append('model', 'User')
-          form.append('field', 'avatar')
-          const response = await fetch(UPLOAD_URL, {
-            method: 'POST',
-            headers: { Authorization: token },
-            body: form,
-          })
-          const data = await response.json()
-          return data.ok ? resolve({ data: { link: data.src } }) : reject(data)
-        } catch (err) {
-          reject(err)
-        }
-      })
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const form = new FormData()
+        form.append('file', file)
+        form.append('model', 'User')
+        form.append('field', 'avatar')
+        const response = await fetch(UPLOAD_URL, {
+          method: 'POST',
+          headers: { Authorization: token },
+          body: form,
+        })
+        const data = await response.json()
+        return data.ok ? resolve({ data: { link: data.src } }) : reject(data)
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
 
   render() {
