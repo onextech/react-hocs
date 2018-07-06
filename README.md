@@ -106,15 +106,6 @@ Return object with prefilled data
 
 Returns **{}** 
 
-### e
-
-does the same as handleChange(), but with an array of { name, value }
-
-**Parameters**
-
--   `e` **{}** 
--   `records` **\[{name, value}]** 
-
 ### withFormFields
 
 Define field props in an array of objects for form to render later
@@ -125,10 +116,10 @@ Pass props to field properties if they are a function
 
 **Parameters**
 
--   `field`  
--   `props`  
+-   `field` **{}** 
+-   `props` **{}** 
 
-Returns **{}** 
+Returns **{}** resolvedProps
 
 ### Field
 

@@ -1,3 +1,5 @@
+// @flow
+import type { ComponentType } from 'react'
 import find from 'lodash/find'
 import isEmpty from 'lodash/isEmpty'
 import intersection from 'lodash/intersection'
@@ -10,13 +12,20 @@ import { MESSAGE_SAVE_FAILURE, MESSAGE_SAVE_SUCCESS } from '../constants/message
 import { FIELD_DATERANGEPICKER, FIELD_CHECKBOX } from '../constants/field'
 import withFormComponents from './withFormComponents'
 
+type FieldsType = Array<{
+  name: string,
+  value: any,
+  required?: boolean,
+  dateFields: Object,
+}>
+
 /**
  * Build a form
  * @param {Object[]} fields
  * @param {{}} options
  * @return {function(*=)}
  */
-const withForm = (fields, options = {}) => (Component) => {
+const withForm = (fields: FieldsType, options: Object = {}) => (Component: ComponentType<*>) => {
   /**
    * Define form state and handlers
    * @param {Object[]} fields
@@ -80,29 +89,23 @@ const withForm = (fields, options = {}) => (Component) => {
       },
     }),
     withHandlers({
-      handleChange: (props) => (e, { name, value }) => {
+      handleChange: (props) => (e, { name, value, checked, start, end }) => {
         const { state: { form, savedRecord }, updateState } = props
-        const pristine = savedRecord[name] === value
-        updateState({ pristine, form: { ...form, [name]: value } })
-      },
-      handleChanges: (props) =>
-        /**
-         * does the same as handleChange(), but with an array of { name, value }
-         * @param {{}} e
-         * @param {[{ name, value }]} records
-         */
-        (e, records) => {
-          const { state: { form, savedRecord }, updateState } = props
+        // value can be string or checked boolean
+        const nextValue = checked || value
+        // check for daterangepicker onchange to diverge onchange behaviour
+        if (typeof nextValue === 'undefined' && start && end) {
           let pristine = true
+          const records = { start, end }
           Object.entries(records).forEach(([name, value]) => {
             pristine = pristine && savedRecord[name] === value
           })
-          updateState({ pristine, form: { ...form, ...records } })
-        },
-      handleCheckboxChange: (props) => (e, { name, checked }) => {
-        const { state: { form, savedRecord }, updateState } = props
-        const pristine = savedRecord[name] === checked
-        updateState({ pristine, form: { ...form, [name]: checked } })
+          return updateState({ pristine, form: { ...form, ...records } })
+        }
+        // check if form is pristine
+        const pristine = savedRecord[name] === nextValue
+        // update state with next value
+        updateState({ pristine, form: { ...form, [name]: nextValue } })
       },
       handleFailure: (props) => (errors) => {
         const { updateState } = props
@@ -211,23 +214,24 @@ const withForm = (fields, options = {}) => (Component) => {
     mapProps((props) => {
       const { state: { form }, handleChange } = props
       const enhancedFields = []
+
       fields.map((field) => {
         /**
          * Pass props to field properties if they are a function
-         * @param field
-         * @param props
-         * @return {{}}
+         * @param {{}} field
+         * @param {{}} props
+         * @return {{}} resolvedProps
          */
         const getResolvedProps = (field, props) => {
-          const callbackProps = {}
+          const resolvedProps = {}
           const isKeylessFunction = (v) => Object.keys(v).length === 0
           Object.keys(field).forEach((key) => {
             const value = field[key]
             if (typeof value === 'function' && isKeylessFunction(value)) {
-              callbackProps[key] = value(props)
+              resolvedProps[key] = value(props)
             }
           })
-          return callbackProps
+          return resolvedProps
         }
         const resolvedProps = getResolvedProps(field, props)
         const enhancedField = {

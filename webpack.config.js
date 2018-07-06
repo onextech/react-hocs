@@ -20,6 +20,19 @@ module.exports = {
         test: /\.css$/,
         use: ['isomorphic-style-loader', 'css-loader'],
       },
+      {
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader',
+        }, {
+          loader: 'less-loader',
+          options: {
+            javascriptEnabled: true,
+          },
+        }],
+      },
     ],
   },
   externals: {

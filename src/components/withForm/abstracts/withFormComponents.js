@@ -73,9 +73,9 @@ const withFormComponents = compose(
             } = fieldProps
             const record = Object.hasOwnProperty.call(form, name) // form must contain this key
             const show = record || required // show optional fields only on update
-            switch (type) {
-              case FIELD_WYSIWYG:
-                if (show) {
+            if (show) {
+              switch (type) {
+                case FIELD_WYSIWYG: {
                   return (
                     <Form.Field key={key} required={required}>
                       <label htmlFor={name}>
@@ -85,9 +85,7 @@ const withFormComponents = compose(
                     </Form.Field>
                   )
                 }
-                break
-              case FIELD_UPLOAD:
-                if (show) {
+                case FIELD_UPLOAD: {
                   const { label, field, ...upload } = rest
                   return (
                     <Form.Field key={key} required={required} {...field}>
@@ -106,25 +104,17 @@ const withFormComponents = compose(
                     </Form.Field>
                   )
                 }
-                break
-              case FIELD_DATERANGEPICKER:
-                if (show) {
+                case FIELD_DATERANGEPICKER: {
                   const { dateFields, label, dateRangePicker } = rest
-                  const { handleChanges } = props
                   return (
                     <Form.Field key={key}>
-                      <label htmlFor={name} {...label} >
-                        {startCase(name)}
-                      </label>
-                      <DateRangePicker onChange={handleChanges} dateFields={dateFields} {...dateRangePicker} />
+                      <label htmlFor={name} {...label} >{startCase(name)}</label>
+                      <DateRangePicker onChange={handleChange} dateFields={dateFields} {...dateRangePicker} />
                     </Form.Field>
                   )
                 }
-                break
-              case FIELD_CHECKBOX:
-                if (show) {
+                case FIELD_CHECKBOX: {
                   const { hidden, label } = rest
-                  const { handleCheckboxChange } = props
                   return (
                     <Form.Field className={CLASS_FIELD_CHECKBOX} key={key} hidden={hidden} required={required}>
                       <label htmlFor={name} className={CLASS_LABEL_CHECKBOX} {...label}>{startCase(name)}</label>
@@ -132,15 +122,16 @@ const withFormComponents = compose(
                         toggle
                         id={name}
                         name={name}
-                        onChange={handleCheckboxChange}
+                        onChange={handleChange}
                         checked={form[name]}
                       />
                     </Form.Field>
                   )
                 }
-                break
-              default:
-                return <Field {...fieldProps} />
+                default: {
+                  return <Field {...fieldProps} />
+                }
+              }
             }
           })}
         </React.Fragment>
