@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.less$/,
         use: [{
-          loader: 'style-loader',
+          loader: 'isomorphic-style-loader',
         }, {
           loader: 'css-loader',
         }, {

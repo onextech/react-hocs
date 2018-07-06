@@ -92,7 +92,7 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
       handleChange: (props) => (e, { name, value, checked, start, end }) => {
         const { state: { form, savedRecord }, updateState } = props
         // value can be string or checked boolean
-        const nextValue = checked || value
+        const nextValue = typeof checked === 'boolean' ? checked : value
         // check for daterangepicker onchange to diverge onchange behaviour
         if (typeof nextValue === 'undefined' && start && end) {
           let pristine = true
