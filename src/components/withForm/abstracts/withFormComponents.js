@@ -2,6 +2,7 @@ import React from 'react'
 import { compose, mapProps } from 'recompose'
 import { Button, Checkbox, Form, Message, Dimmer, Loader } from 'semantic-ui-react'
 import startCase from 'lodash/startCase'
+import has from 'lodash/has'
 import Field from '../components/Field'
 import Wysiwyg from '../components/Wysiwyg'
 import DateRangePicker from '../components/DateRangePicker'
@@ -64,6 +65,7 @@ const withFormComponents = compose(
               key,
               type,
               name,
+              path,
               onChange: handleChange,
               component: Component,
               form,
@@ -71,8 +73,8 @@ const withFormComponents = compose(
               props,
               ...rest
             } = fieldProps
-            const record = Object.hasOwnProperty.call(form, name) // form must contain this key
-            const show = record || required // show optional fields only on update
+            const isInRecord = has(form, path || name) // form must contain this key
+            const show = isInRecord || required // show optional fields only on update
             if (show) {
               switch (type) {
                 case FIELD_WYSIWYG: {
@@ -129,7 +131,7 @@ const withFormComponents = compose(
                   )
                 }
                 default: {
-                  return <Field {...fieldProps} />
+                  return <Field isInRecord={isInRecord} {...fieldProps} />
                 }
               }
             }

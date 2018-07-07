@@ -13,6 +13,12 @@ const fields = [
     name: 'name', required: true,
   },
   {
+    name: 'email',
+    path: 'user.email',
+    icon: 'user',
+    required: true,
+  },
+  {
     name: 'content',
     required: true,
     type: FIELD_WYSIWYG,

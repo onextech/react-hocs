@@ -3,6 +3,8 @@ import type { ComponentType } from 'react'
 import find from 'lodash/find'
 import isEmpty from 'lodash/isEmpty'
 import intersection from 'lodash/intersection'
+import set from 'lodash/set'
+import cloneDeep from 'lodash/cloneDeep'
 import qs from 'query-string'
 import { compose, lifecycle, withHandlers, mapProps } from 'recompose'
 import { message } from 'antd'
@@ -89,7 +91,7 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
       },
     }),
     withHandlers({
-      handleChange: (props) => (e, { name, value, checked, start, end }) => {
+      handleChange: (props) => (e, { name, value, path, checked, start, end }) => {
         const { state: { form, savedRecord }, updateState } = props
         // value can be string or checked boolean
         const nextValue = typeof checked === 'boolean' ? checked : value
@@ -104,8 +106,11 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
         }
         // check if form is pristine
         const pristine = savedRecord[name] === nextValue
+        // check if value to set is nested
+        const prevForm = path ? cloneDeep(form) : { ...form }
+        const nextForm = set(prevForm, path || name, nextValue)
         // update state with next value
-        updateState({ pristine, form: { ...form, [name]: nextValue } })
+        updateState({ pristine, form: nextForm })
       },
       handleFailure: (props) => (errors) => {
         const { updateState } = props
@@ -163,30 +168,44 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
           const getRequiredFields = (fields) => {
             const requiredFields = []
             fields.forEach((field) => {
-              if (field.type === FIELD_DATERANGEPICKER) {
-                const { required: isRequired, dateFields: { start, end } } = field
-                if (isRequired) {
-                  const { name: startName } = start
-                  const { name: endName } = end
-                  requiredFields.push(startName, endName)
-                }
-                return isRequired
+              const {
+                required,
+                name,
+                path,
+                dateFields,
+              } = field
+              const isFunction = typeof required === 'function'
+              const isRequired = isFunction ? required(props) : required
+              if (dateFields && dateFields.start && dateFields.end) {
+                const { start, end } = dateFields
+                const { name: startName } = start
+                const { name: endName } = end
+                return isRequired && requiredFields.push(startName, endName)
               }
               if (field.type !== FIELD_CHECKBOX) {
-                const isRequired = typeof field.required === 'function' ? field.required(props) : field.required
-                return isRequired && requiredFields.push(field.name)
+                return isRequired && requiredFields.push(path || name)
               }
             })
             return requiredFields
           }
+          const getFormKeys = (fields) => {
+            return fields.map((field) => {
+              const { path, name } = field
+              return path || name
+            })
+          }
 
           const form = getCleanForm(rawForm)
           const requiredFields = getRequiredFields(fields)
-          const isFormCompleted = intersection(Object.keys(form), requiredFields).length === requiredFields.length
+          const formKeys = getFormKeys(fields)
+          const isFormCompleted = intersection(formKeys, requiredFields).length === requiredFields.length
+
+          console.log('form at handleSubmit', form)
 
           if (isFormCompleted) {
             updateState({ loading: true })
-            const submit = handleSubmit || (record ? handleUpdate : handleCreate) // Enable dynamic submit actions
+            // Enable dynamic submit actions
+            const submit = handleSubmit || (record ? handleUpdate : handleCreate)
             const onSubmit = await submit(form)
             const result = onSubmit.data[Object.keys(onSubmit.data)[0]]
             const { ok, validationErrors } = result
