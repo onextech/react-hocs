@@ -24,30 +24,26 @@ const fields = [
     required: true,
     initialValue: ({ record }) => record.teacher.organizations.map(({ id }) => id),
     path: 'teacher.organizations',
-    props: {
-      control: Select,
-      options: () => {
-        return [
-          { key: 1, text: 'Org 1', value: 1 },
-          { key: 2, text: 'Org 2', value: 2 },
-        ]
-      },
-      search: true,
-      multiple: true,
+    control: Select,
+    options: () => {
+      return [
+        { key: 1, text: 'Org 1', value: 1 },
+        { key: 2, text: 'Org 2', value: 2 },
+      ]
     },
+    search: true,
+    multiple: true,
   },
   {
     name: 'country',
     required: true,
     path: 'country',
-    props: {
-      control: Select,
-      options: [
-        { key: 1, text: 'Country A', value: 1 },
-        { key: 2, text: 'Country B', value: 2 },
-      ],
-      search: true,
-    },
+    control: Select,
+    options: [
+      { key: 1, text: 'Country A', value: 1 },
+      { key: 2, text: 'Country B', value: 2 },
+    ],
+    search: true,
   },
   {
     name: 'content',

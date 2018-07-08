@@ -38,6 +38,24 @@ type OptionsType = {
  */
 const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: ComponentType<*>) => {
   /**
+   * Set fields with `initialValue` prop
+   * @param {{}} record
+   * @param {{}} props
+   * @return {{}}
+   */
+  const setInitialForm = (record: Object, props: Object) => {
+    const initialForm = cloneDeep(record)
+    fields.forEach((field) => {
+      const { initialValue, name, path } = field
+      const key = path || name
+      if (initialValue) {
+        set(initialForm, key, initialValue(props))
+      }
+    })
+    return initialForm
+  }
+
+  /**
    * Define form state and handlers
    * @param {Object[]} fields
    * @return {function(*=)}
@@ -58,19 +76,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         const { updateState, record, match, location } = this.props
 
         if (record) {
-          const setInitialForm = (record) => {
-            const initialForm = cloneDeep(record)
-            fields.forEach((field) => {
-              const { initialValue, name, path } = field
-              const key = path || name
-              if (initialValue) {
-                set(initialForm, key, initialValue(this.props))
-              }
-            })
-            return initialForm
-          }
-          const initialForm = setInitialForm(record)
-          return updateState({ form: initialForm, savedRecord: record })
+          return updateState({ form: setInitialForm(record, this.props), savedRecord: record })
         }
 
         // set values of fields if they're already set when the component first mounted
@@ -142,7 +148,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         const { setState, state, onSuccess, closeModal, closeModalKey: key } = props
         const nextState = {
           ...state,
-          form: record, // Either the `node` key or by default: {}
+          form: setInitialForm(record, props), // Either the `node` key or by default: {}
           savedRecord: record,
           pristine: true,
           success: true,

@@ -135,7 +135,7 @@ Return Semantic UI Field
     -   `$0.isInRecord`  
     -   `$0.required`  
     -   `$0.hidden`  
-    -   `$0.props`  
+    -   `$0.rest` **...any** 
 
 ### makeSelectOptionsFromConstants
 
