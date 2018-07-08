@@ -11,13 +11,14 @@ import { message } from 'antd'
 import withSetState from '../../utils/recompose'
 import { TYPENAME_FILE } from '../constants/typename'
 import { MESSAGE_SAVE_FAILURE, MESSAGE_SAVE_SUCCESS } from '../constants/message'
-import { FIELD_DATERANGEPICKER, FIELD_CHECKBOX } from '../constants/field'
+import { FIELD_CHECKBOX } from '../constants/field'
 import withFormComponents from './withFormComponents'
 
 type FieldsType = Array<{
   name: string,
+  path: string,
   value: any,
-  required?: boolean,
+  required: (boolean | Function),
   dateFields: Object,
 }>
 
@@ -175,6 +176,7 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
                 dateFields,
               } = field
               const isFunction = typeof required === 'function'
+              // $FlowFixMe
               const isRequired = isFunction ? required(props) : required
               if (dateFields && dateFields.start && dateFields.end) {
                 const { start, end } = dateFields
@@ -199,8 +201,6 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
           const requiredFields = getRequiredFields(fields)
           const formKeys = getFormKeys(fields)
           const isFormCompleted = intersection(formKeys, requiredFields).length === requiredFields.length
-
-          console.log('form at handleSubmit', form)
 
           if (isFormCompleted) {
             updateState({ loading: true })

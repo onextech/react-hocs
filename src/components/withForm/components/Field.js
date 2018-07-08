@@ -33,12 +33,14 @@ Field.propTypes = {
   onChange: PropTypes.func.isRequired,
   isInRecord: PropTypes.bool.isRequired,
   name: PropTypes.string,
+  path: PropTypes.string,
   required: PropTypes.bool,
   hidden: PropTypes.bool,
 }
 
 Field.defaultProps = {
   name: undefined,
+  path: undefined,
   required: undefined,
   hidden: undefined,
 }
