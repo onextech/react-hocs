@@ -76,13 +76,17 @@ const fields = [
   },
 ]
 
-const DemoForm = withForm(fields)
+const DemoForm = withForm(fields, {
+  preSubmit: (form) => ({ ...form, organizations: form.teacher.organizations }),
+})
 
 const demoRecord = {
   id: 1,
   name: 'Joel',
   country: 2,
   user: { id: 1, email: 'hello@meme.com' },
+  isPercentage: false,
+  content: '<p>hello</p>',
   teacher: {
     id: 1,
     mobile: '1822811',

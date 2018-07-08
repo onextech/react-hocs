@@ -7,7 +7,7 @@ import { Form, Input } from 'semantic-ui-react'
  * Return Semantic UI Field
  * @link https://react.semantic-ui.com/collections/form#shorthand-field-control
  */
-const Field = ({ form, onChange: handleChange, name, path, value, isInRecord, required, hidden, props, ...rest }) => {
+const Field = ({ onChange: handleChange, name, path, value, isInRecord, required, hidden, props }) => {
   const hide = typeof hidden === 'boolean' ? hidden : (!isInRecord && !required) // hide optional fields on create
   return (
     <Form.Field
@@ -27,7 +27,6 @@ const Field = ({ form, onChange: handleChange, name, path, value, isInRecord, re
 }
 
 Field.propTypes = {
-  form: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   isInRecord: PropTypes.bool.isRequired,
   value: PropTypes.any.isRequired,

@@ -1,19 +1,18 @@
 // @flow
 import type { ComponentType } from 'react'
+import { compose, lifecycle, withHandlers, mapProps } from 'recompose'
+import qs from 'query-string'
+import { message } from 'antd'
 import find from 'lodash/find'
 import isEmpty from 'lodash/isEmpty'
-import intersection from 'lodash/intersection'
 import set from 'lodash/set'
+import has from 'lodash/has'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
-import qs from 'query-string'
-import { compose, lifecycle, withHandlers, mapProps } from 'recompose'
-import { message } from 'antd'
 import withSetState from '../../utils/recompose'
+import withFormComponents from './withFormComponents'
 import { TYPENAME_FILE } from '../constants/typename'
 import { MESSAGE_SAVE_FAILURE, MESSAGE_SAVE_SUCCESS } from '../constants/message'
-import { FIELD_CHECKBOX } from '../constants/field'
-import withFormComponents from './withFormComponents'
 
 type FieldsType = Array<{
   name: string,
@@ -24,13 +23,18 @@ type FieldsType = Array<{
   dateFields: Object,
 }>
 
+type OptionsType = {
+  props?: Object,
+  preSubmit?: Function,
+}
+
 /**
  * Build a form
  * @param {Object[]} fields
  * @param {{}} options
  * @return {function(*=)}
  */
-const withForm = (fields: FieldsType, options: Object = {}) => (Component: ComponentType<*>) => {
+const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: ComponentType<*>) => {
   /**
    * Define form state and handlers
    * @param {Object[]} fields
@@ -92,12 +96,10 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
           })
           return prefilledRecord
         }
-
         if (match && !isEmpty(match.params)) {
           const prefilledRecord = getPrefilledRecord(match.params)
           return updateState({ form: prefilledRecord, savedRecord: prefilledRecord })
         }
-
         if (location && !isEmpty(location.search)) {
           const query = qs.parse(location.search)
           const prefilledRecord = getPrefilledRecord(query)
@@ -195,34 +197,22 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
               const isRequired = isFunction ? required(props) : required
               if (dateFields && dateFields.start && dateFields.end) {
                 const { start, end } = dateFields
-                const { name: startName } = start
-                const { name: endName } = end
-                return isRequired && requiredFields.push(startName, endName)
+                return isRequired && requiredFields.push(start.name, end.name)
               }
-              if (field.type !== FIELD_CHECKBOX) {
-                return isRequired && requiredFields.push(path || name)
-              }
+              return isRequired && requiredFields.push(path || name)
             })
             return requiredFields
           }
-          const getFormKeys = (fields) => {
-            return fields.map((field) => {
-              const { path, name } = field
-              return path || name
-            })
-          }
 
-          const form = getCleanForm(rawForm)
+          let form = getCleanForm(rawForm)
           const requiredFields = getRequiredFields(fields)
-          const formKeys = getFormKeys(fields)
-          const isFormCompleted = intersection(formKeys, requiredFields).length === requiredFields.length
-
-          console.log('handleSubmit', form)
+          const isFormCompleted = requiredFields.every((requiredField) => has(form, requiredField))
 
           if (isFormCompleted) {
             updateState({ loading: true })
             // Enable dynamic submit actions
             const submit = handleSubmit || (record ? handleUpdate : handleCreate)
+            if (options.preSubmit) form = options.preSubmit(form)
             const onSubmit = await submit(form)
             const result = onSubmit.data[Object.keys(onSubmit.data)[0]]
             const { ok, validationErrors } = result
