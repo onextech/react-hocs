@@ -26,10 +26,12 @@ const fields = [
     path: 'teacher.organizations',
     props: {
       control: Select,
-      options: [
-        { key: 1, text: 'Org 1', value: 1 },
-        { key: 2, text: 'Org 2', value: 2 },
-      ],
+      options: () => {
+        return [
+          { key: 1, text: 'Org 1', value: 1 },
+          { key: 2, text: 'Org 2', value: 2 },
+        ]
+      },
       search: true,
       multiple: true,
     },

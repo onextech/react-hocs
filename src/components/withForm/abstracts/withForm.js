@@ -18,6 +18,7 @@ type FieldsType = Array<{
   name: string,
   path: string,
   value: any,
+  props: Object,
   required: (boolean | Function),
   initialValue: any,
   dateFields: Object,
@@ -247,10 +248,21 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         const getResolvedProps = (field, props) => {
           const resolvedProps = {}
           const isKeylessFunction = (v) => Object.keys(v).length === 0
+          const shouldResolve = (value) => typeof value === 'function' && isKeylessFunction(value)
           Object.keys(field).forEach((key) => {
             const value = field[key]
-            if (typeof value === 'function' && isKeylessFunction(value)) {
-              resolvedProps[key] = value(props)
+
+            // 1. Resolve primary level values // $FlowFixMe
+            if (shouldResolve(value)) resolvedProps[key] = value(props)
+
+            // 2. Resolve secondary-level values in `props` object as well
+            if (key === 'props' && typeof value === 'object') {
+              resolvedProps[key] = value
+              // $FlowFixMe
+              Object.keys(value).forEach((propKey) => {
+                const propValue = value[propKey]
+                if (shouldResolve(propValue)) resolvedProps[key][propKey] = propValue(props)
+              })
             }
           })
           return { ...field, ...resolvedProps }

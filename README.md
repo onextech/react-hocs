@@ -128,14 +128,34 @@ Return Semantic UI Field
 **Parameters**
 
 -   `$0` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `$0.form`  
     -   `$0.onChange`  
     -   `$0.name`  
     -   `$0.path`  
+    -   `$0.value`  
     -   `$0.isInRecord`  
     -   `$0.required`  
     -   `$0.hidden`  
-    -   `$0.rest` **...any** 
+    -   `$0.props`  
+
+### makeSelectOptionsFromConstants
+
+Make field select options
+
+**Parameters**
+
+-   `data` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+
+### makeSelectOptionsFromNode
+
+Make select field options from a graphql node collection
+
+**Parameters**
+
+-   `data` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** 
+-   `textKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `valueKey` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)**  (optional, default `'id'`)
 
 ## License
 
