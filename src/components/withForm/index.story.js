@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { storiesOf } from '@storybook/react'
+import { Select } from 'semantic-ui-react'
 import withForm from '.'
 import {
   FIELD_WYSIWYG,
@@ -19,14 +20,40 @@ const fields = [
     required: true,
   },
   {
+    name: 'organizations',
+    required: true,
+    initialValue: ({ record }) => record.teacher.organizations.map(({ id }) => id),
+    path: 'teacher.organizations',
+    props: {
+      control: Select,
+      options: [
+        { key: 1, text: 'Org 1', value: 1 },
+        { key: 2, text: 'Org 2', value: 2 },
+      ],
+      search: true,
+      multiple: true,
+    },
+  },
+  {
+    name: 'country',
+    required: true,
+    path: 'country',
+    props: {
+      control: Select,
+      options: [
+        { key: 1, text: 'Country A', value: 1 },
+        { key: 2, text: 'Country B', value: 2 },
+      ],
+      search: true,
+    },
+  },
+  {
     name: 'content',
     required: true,
     type: FIELD_WYSIWYG,
-    props: () => {
-      return {
-        user: { id: '123' },
-        uploadUrl: 'http://example.com',
-      }
+    props: {
+      user: { id: '123' },
+      uploadUrl: 'http://example.com',
     },
   },
   { name: 'isPercentage', type: FIELD_CHECKBOX, required: true },
@@ -51,5 +78,19 @@ const fields = [
 
 const DemoForm = withForm(fields)
 
-storiesOf('withForm', module)
-  .add('Default', () => <DemoForm />)
+const demoRecord = {
+  id: 1,
+  name: 'Joel',
+  country: 2,
+  user: { id: 1, email: 'hello@meme.com' },
+  teacher: {
+    id: 1,
+    mobile: '1822811',
+    organizations: [
+      { id: 1, name: 'Org 1' },
+      { id: 2, name: 'Org 2' },
+    ],
+  },
+}
+
+storiesOf('withForm', module).add('Default', () => <DemoForm record={demoRecord} />)

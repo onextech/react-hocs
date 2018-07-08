@@ -131,6 +131,8 @@ Return Semantic UI Field
     -   `$0.form`  
     -   `$0.onChange`  
     -   `$0.name`  
+    -   `$0.path`  
+    -   `$0.isInRecord`  
     -   `$0.required`  
     -   `$0.hidden`  
     -   `$0.rest` **...any** 

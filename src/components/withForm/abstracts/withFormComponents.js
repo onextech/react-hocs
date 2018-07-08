@@ -110,8 +110,13 @@ const withFormComponents = compose(
                   const { dateFields, label, dateRangePicker } = rest
                   return (
                     <Form.Field key={key}>
-                      <label htmlFor={name} {...label} >{startCase(name)}</label>
-                      <DateRangePicker onChange={handleChange} dateFields={dateFields} {...dateRangePicker} />
+                      <label htmlFor={name} {...label}>{startCase(name)}</label>
+                      <DateRangePicker
+                        onChange={handleChange}
+                        dateFields={dateFields}
+                        {...dateRangePicker}
+                        {...props}
+                      />
                     </Form.Field>
                   )
                 }

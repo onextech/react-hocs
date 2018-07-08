@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import intersection from 'lodash/intersection'
 import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 import qs from 'query-string'
 import { compose, lifecycle, withHandlers, mapProps } from 'recompose'
 import { message } from 'antd'
@@ -19,6 +20,7 @@ type FieldsType = Array<{
   path: string,
   value: any,
   required: (boolean | Function),
+  initialValue: any,
   dateFields: Object,
 }>
 
@@ -50,7 +52,19 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
         const { updateState, record, match, location } = this.props
 
         if (record) {
-          return updateState({ form: record, savedRecord: record })
+          const setInitialForm = (record) => {
+            const initialForm = cloneDeep(record)
+            fields.forEach((field) => {
+              const { initialValue, name, path } = field
+              const key = path || name
+              if (initialValue) {
+                set(initialForm, key, initialValue(this.props))
+              }
+            })
+            return initialForm
+          }
+          const initialForm = setInitialForm(record)
+          return updateState({ form: initialForm, savedRecord: record })
         }
 
         // set values of fields if they're already set when the component first mounted
@@ -92,8 +106,9 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
       },
     }),
     withHandlers({
-      handleChange: (props) => (e, { name, value, path, checked, start, end }) => {
+      handleChange: (props) => (e, data) => {
         const { state: { form, savedRecord }, updateState } = props
+        const { name, value, path, checked, start, end } = data
         // value can be string or checked boolean
         const nextValue = typeof checked === 'boolean' ? checked : value
         // check for daterangepicker onchange to diverge onchange behaviour
@@ -202,6 +217,8 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
           const formKeys = getFormKeys(fields)
           const isFormCompleted = intersection(formKeys, requiredFields).length === requiredFields.length
 
+          console.log('handleSubmit', form)
+
           if (isFormCompleted) {
             updateState({ loading: true })
             // Enable dynamic submit actions
@@ -209,10 +226,7 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
             const onSubmit = await submit(form)
             const result = onSubmit.data[Object.keys(onSubmit.data)[0]]
             const { ok, validationErrors } = result
-            if (!ok) {
-              return handleFailure(validationErrors)
-            }
-            return handleSuccess(result)
+            return ok ? handleSuccess(result) : handleFailure(validationErrors)
           }
         } catch (err) {
           const networkError = [{
@@ -233,7 +247,6 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
     mapProps((props) => {
       const { state: { form }, handleChange } = props
       const enhancedFields = []
-
       fields.map((field) => {
         /**
          * Pass props to field properties if they are a function
@@ -250,16 +263,27 @@ const withForm = (fields: FieldsType, options: Object = {}) => (Component: Compo
               resolvedProps[key] = value(props)
             }
           })
-          return resolvedProps
+          return { ...field, ...resolvedProps }
         }
+
+        const getValue = (props) => {
+          const { name, path } = props
+          const key = path || name
+          return get(form, key, '')
+        }
+
         const resolvedProps = getResolvedProps(field, props)
+
+        const value = getValue(resolvedProps)
+
         const enhancedField = {
           key: field.name,
           form,
           onChange: handleChange,
-          ...field,
+          value,
           ...resolvedProps,
         }
+
         return enhancedFields.push(enhancedField)
       })
       return { ...props, fields: enhancedFields, ...options.props }
