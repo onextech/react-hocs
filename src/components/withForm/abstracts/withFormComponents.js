@@ -70,6 +70,7 @@ const withFormComponents = compose(
               component: Component,
               form,
               required,
+              initialValue,
               props,
               ...rest
             } = fieldProps
@@ -136,7 +137,8 @@ const withFormComponents = compose(
                   )
                 }
                 default: {
-                  return <Field isInRecord={isInRecord} {...fieldProps} />
+                  const { initialValue, ...inputProps } = fieldProps
+                  return <Field isInRecord={isInRecord} {...inputProps} />
                 }
               }
             }

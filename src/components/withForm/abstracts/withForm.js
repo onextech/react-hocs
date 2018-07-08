@@ -27,6 +27,7 @@ type FieldsType = Array<{
 type OptionsType = {
   props?: Object,
   preSubmit?: Function,
+  postSubmit?: Function,
 }
 
 /**
@@ -214,7 +215,8 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
             // Enable dynamic submit actions
             const submit = handleSubmit || (record ? handleUpdate : handleCreate)
             if (options.preSubmit) form = options.preSubmit(form)
-            const onSubmit = await submit(form)
+            let onSubmit = await submit(form)
+            if (options.postSubmit) onSubmit = options.postSubmit(onSubmit)
             const result = onSubmit.data[Object.keys(onSubmit.data)[0]]
             const { ok, validationErrors } = result
             return ok ? handleSuccess(result) : handleFailure(validationErrors)
