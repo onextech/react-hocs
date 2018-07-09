@@ -66,11 +66,11 @@ const withFormComponents = compose(
               type,
               name,
               path,
+              value,
               onChange: handleChange,
               component: Component,
               form,
               required,
-              initialValue,
               props,
               ...rest
             } = fieldProps
@@ -131,7 +131,8 @@ const withFormComponents = compose(
                         id={name}
                         name={name}
                         onChange={handleChange}
-                        checked={form[name]}
+                        checked={Boolean(value)}
+                        path={path}
                       />
                     </Form.Field>
                   )

@@ -55,6 +55,69 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
   }
 
   /**
+   * Define field props in an array of objects for form to render later
+   */
+  const withFormFields = compose(
+    mapProps((props) => {
+      const { state: { form }, handleChange } = props
+
+      const enhancedFields = []
+      fields.map((field) => {
+        /**
+         * Pass props to field properties if they are a function
+         * @param {{}} field
+         * @param {{}} props
+         * @return {{}} resolvedProps
+         */
+        const getResolvedProps = (field, props) => {
+          const resolvedProps = {}
+          const isKeylessFunction = (v) => Object.keys(v).length === 0
+          const shouldResolve = (value) => typeof value === 'function' && isKeylessFunction(value)
+          Object.keys(field).forEach((key) => {
+            const value = field[key]
+
+            // 1. Resolve primary level values // $FlowFixMe
+            if (shouldResolve(value)) resolvedProps[key] = value(props)
+
+            // 2. Resolve secondary-level values in `props` object as well
+            if (key === 'props' && typeof value === 'object') {
+              resolvedProps[key] = value
+              // $FlowFixMe
+              Object.keys(value).forEach((propKey) => {
+                const propValue = value[propKey]
+                if (shouldResolve(propValue)) resolvedProps[key][propKey] = propValue(props)
+              })
+            }
+          })
+          return { ...field, ...resolvedProps }
+        }
+
+        const getValue = (props) => {
+          const { name, path } = props
+          const key = path || name
+          return get(form, key) || ''
+        }
+
+        const resolvedProps = getResolvedProps(field, props)
+
+        const value = getValue(resolvedProps)
+
+        const enhancedField = {
+          key: field.name,
+          form,
+          onChange: handleChange,
+          value,
+          ...resolvedProps,
+        }
+
+        return enhancedFields.push(enhancedField)
+      })
+
+      return { ...props, fields: enhancedFields, ...options.props }
+    }),
+  )
+
+  /**
    * Define form state and handlers
    * @param {Object[]} fields
    * @return {function(*=)}
@@ -122,7 +185,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         const { name, value, path, checked, start, end } = data
         // value can be string or checked boolean
         const nextValue = typeof checked === 'boolean' ? checked : value
-        // check for daterangepicker onchange to diverge onchange behaviour
+        // check for Daterangepicker onchange to diverge onchange behaviour
         if (typeof nextValue === 'undefined' && start && end) {
           let pristine = true
           const records = { start, end }
@@ -237,69 +300,6 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
           return handleFailure(networkError)
         }
       },
-    }),
-  )
-
-  /**
-   * Define field props in an array of objects for form to render later
-   */
-  const withFormFields = compose(
-    mapProps((props) => {
-      const { state: { form }, handleChange } = props
-
-      const enhancedFields = []
-      fields.map((field) => {
-        /**
-         * Pass props to field properties if they are a function
-         * @param {{}} field
-         * @param {{}} props
-         * @return {{}} resolvedProps
-         */
-        const getResolvedProps = (field, props) => {
-          const resolvedProps = {}
-          const isKeylessFunction = (v) => Object.keys(v).length === 0
-          const shouldResolve = (value) => typeof value === 'function' && isKeylessFunction(value)
-          Object.keys(field).forEach((key) => {
-            const value = field[key]
-
-            // 1. Resolve primary level values // $FlowFixMe
-            if (shouldResolve(value)) resolvedProps[key] = value(props)
-
-            // 2. Resolve secondary-level values in `props` object as well
-            if (key === 'props' && typeof value === 'object') {
-              resolvedProps[key] = value
-              // $FlowFixMe
-              Object.keys(value).forEach((propKey) => {
-                const propValue = value[propKey]
-                if (shouldResolve(propValue)) resolvedProps[key][propKey] = propValue(props)
-              })
-            }
-          })
-          return { ...field, ...resolvedProps }
-        }
-
-        const getValue = (props) => {
-          const { name, path } = props
-          const key = path || name
-          return get(form, key) || ''
-        }
-
-        const resolvedProps = getResolvedProps(field, props)
-
-        const value = getValue(resolvedProps)
-
-        const enhancedField = {
-          key: field.name,
-          form,
-          onChange: handleChange,
-          value,
-          ...resolvedProps,
-        }
-
-        return enhancedFields.push(enhancedField)
-      })
-
-      return { ...props, fields: enhancedFields, ...options.props }
     }),
   )
 

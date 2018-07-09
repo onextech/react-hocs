@@ -15,6 +15,12 @@ const fields = [
     name: 'name', required: true,
   },
   {
+    name: 'isModerator',
+    path: 'teacher.isModerator',
+    type: FIELD_CHECKBOX,
+    initialValue: ({ record }) => get(record, 'teacher.isModerator'),
+  },
+  {
     name: 'email',
     path: 'user.email',
     icon: 'user',
@@ -79,7 +85,13 @@ const fields = [
 ]
 
 const DemoForm = withForm(fields, {
-  preSubmit: (form) => ({ ...form, organizations: form.teacher.organizations }),
+  preSubmit: (form) => {
+    return {
+      ...form,
+      organizations: form.teacher.organizations,
+      isModerator: form.teacher.isModerator,
+    }
+  },
 })
 
 const demoRecord = {
@@ -91,6 +103,7 @@ const demoRecord = {
   content: '<p>hello</p>',
   teacher: {
     id: 1,
+    isModerator: true,
     mobile: '1822811',
     organizations: [
       { id: 1, name: 'Org 1' },
