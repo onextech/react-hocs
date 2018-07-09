@@ -97,6 +97,21 @@ Set fields with `initialValue` prop
 
 Returns **{}** 
 
+### withFormFields
+
+Define field props in an array of objects for form to render later
+
+### getResolvedProps
+
+Pass props to field properties if they are a function
+
+**Parameters**
+
+-   `field` **{}** 
+-   `props` **{}** 
+
+Returns **{}** resolvedProps
+
 ### withFormHandlers
 
 Define form state and handlers
@@ -116,21 +131,6 @@ Return object with prefilled data
 -   `prefilledData` **{}** 
 
 Returns **{}** 
-
-### withFormFields
-
-Define field props in an array of objects for form to render later
-
-### getResolvedProps
-
-Pass props to field properties if they are a function
-
-**Parameters**
-
--   `field` **{}** 
--   `props` **{}** 
-
-Returns **{}** resolvedProps
 
 ### Field
 
