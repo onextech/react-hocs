@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import get from 'lodash/get'
 import { storiesOf } from '@storybook/react'
 import { Select } from 'semantic-ui-react'
 import withForm from '.'
@@ -22,7 +23,10 @@ const fields = [
   {
     name: 'organizations',
     required: true,
-    initialValue: ({ record }) => record.teacher.organizations.map(({ id }) => id),
+    initialValue: ({ record }) => {
+      const organizations = get(record, 'teacher.organizations')
+      return organizations ? organizations.map(({ id }) => id) : []
+    },
     path: 'teacher.organizations',
     control: Select,
     options: () => {
@@ -95,4 +99,6 @@ const demoRecord = {
   },
 }
 
-storiesOf('withForm', module).add('Default', () => <DemoForm record={demoRecord} />)
+storiesOf('withForm', module)
+  .add('Update', () => <DemoForm record={demoRecord} />)
+  .add('Create', () => <DemoForm />)

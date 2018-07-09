@@ -43,14 +43,13 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
    * @param {{}} props
    * @return {{}}
    */
-  const setInitialForm = (record: Object, props: Object) => {
-    const initialForm = cloneDeep(record)
+  const setInitialForm = (record?: Object, props: Object) => {
+    // `initialForm` will cover both update and create states
+    const initialForm = record ? cloneDeep(record) : {}
     fields.forEach((field) => {
       const { initialValue, name, path } = field
       const key = path || name
-      if (initialValue) {
-        set(initialForm, key, initialValue(props))
-      }
+      if (initialValue) set(initialForm, key, initialValue(props))
     })
     return initialForm
   }
@@ -75,8 +74,10 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
       componentDidMount() {
         const { updateState, record, match, location } = this.props
 
-        if (record) {
-          return updateState({ form: setInitialForm(record, this.props), savedRecord: record })
+        const initialForm = setInitialForm(record, this.props)
+        const hasInitialValuesInForm = Object.keys(initialForm).length
+        if (record || hasInitialValuesInForm) {
+          return updateState({ form: initialForm, savedRecord: record || initialForm })
         }
 
         // set values of fields if they're already set when the component first mounted
@@ -245,6 +246,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
   const withFormFields = compose(
     mapProps((props) => {
       const { state: { form }, handleChange } = props
+
       const enhancedFields = []
       fields.map((field) => {
         /**
@@ -296,6 +298,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
 
         return enhancedFields.push(enhancedField)
       })
+
       return { ...props, fields: enhancedFields, ...options.props }
     }),
   )
