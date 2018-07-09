@@ -281,7 +281,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         const getValue = (props) => {
           const { name, path } = props
           const key = path || name
-          return get(form, key, '')
+          return get(form, key) || ''
         }
 
         const resolvedProps = getResolvedProps(field, props)

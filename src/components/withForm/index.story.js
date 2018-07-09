@@ -84,7 +84,7 @@ const DemoForm = withForm(fields, {
 
 const demoRecord = {
   id: 1,
-  name: 'Joel',
+  name: null,
   country: 2,
   user: { id: 1, email: 'hello@meme.com' },
   isPercentage: false,

@@ -86,6 +86,17 @@ Build a form
 
 Returns **function (any?)** 
 
+### setInitialForm
+
+Set fields with `initialValue` prop
+
+**Parameters**
+
+-   `record` **{}** 
+-   `props` **{}** 
+
+Returns **{}** 
+
 ### withFormHandlers
 
 Define form state and handlers
