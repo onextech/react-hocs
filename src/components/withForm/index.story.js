@@ -23,13 +23,9 @@ const fields = [
     required: true,
     type: FIELD_IMAGES,
     upload: {
-      // action: '//jsonplaceholder.typicode.com/posts/',
-      // headers: {
-      //   Authorization: 'token',
-      // },
       data: {
-        model: 'Name',
-        field: 'Somewhere',
+        model: 'ModelName',
+        field: 'folder-name',
       },
     },
   },
@@ -111,9 +107,7 @@ const fields = [
 ]
 
 const DemoForm = withForm(fields, {
-  uploadConfig: {
-    url: '//jsonplaceholder.typicode.com/posts/',
-  },
+  uploadConfig: { url: '//jsonplaceholder.typicode.com/posts/' },
   preSubmit: (form) => {
     return {
       ...form,

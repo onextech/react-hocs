@@ -112,6 +112,10 @@ Pass props to field properties if they are a function
 
 Returns **{}** resolvedProps
 
+### withFormOptions
+
+Add form option props to pass into form components
+
 ### withFormHandlers
 
 Define form state and handlers
