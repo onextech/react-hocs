@@ -145,8 +145,8 @@ class Wysiwyg extends React.Component {
 Wysiwyg.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  uploadUrl: PropTypes.string.isRequired,
+  user: PropTypes.object,
+  uploadUrl: PropTypes.string,
   uploadConfig: PropTypes.shape({
     url: PropTypes.string.isRequired,
     token: PropTypes.string,
@@ -157,6 +157,8 @@ Wysiwyg.propTypes = {
 Wysiwyg.defaultProps = {
   initialValue: undefined,
   uploadConfig: undefined,
+  uploadUrl: undefined,
+  user: undefined,
 }
 
 export default Wysiwyg
