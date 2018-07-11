@@ -8,6 +8,7 @@ import {
   FIELD_WYSIWYG,
   FIELD_CHECKBOX,
   FIELD_DATERANGEPICKER,
+  FIELD_DATEPICKER,
 } from './constants/field'
 
 const fields = [
@@ -15,7 +16,13 @@ const fields = [
     name: 'name', required: true,
   },
   {
+    name: 'eventDate',
+    required: true,
+    type: FIELD_DATEPICKER,
+  },
+  {
     name: 'isModerator',
+    required: true,
     path: 'teacher.isModerator',
     type: FIELD_CHECKBOX,
     initialValue: ({ record }) => get(record, 'teacher.isModerator'),
@@ -97,6 +104,7 @@ const DemoForm = withForm(fields, {
 const demoRecord = {
   id: 1,
   name: null,
+  eventDate: 'Wed Jul 11 2018 13:04:35 GMT+0800 (+08)',
   country: 2,
   user: { id: 1, email: 'hello@meme.com' },
   isPercentage: false,

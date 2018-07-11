@@ -186,7 +186,8 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         // value can be string or checked boolean
         const nextValue = typeof checked === 'boolean' ? checked : value
         // check for Daterangepicker onchange to diverge onchange behaviour
-        if (typeof nextValue === 'undefined' && start && end) {
+        const hasNoNextValue = typeof nextValue === 'undefined'
+        if (hasNoNextValue && start && end) {
           let pristine = true
           const records = { start, end }
           Object.entries(records).forEach(([name, value]) => {

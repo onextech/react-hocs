@@ -6,7 +6,16 @@ import has from 'lodash/has'
 import Field from '../components/Field'
 import Wysiwyg from '../components/Wysiwyg'
 import DateRangePicker from '../components/DateRangePicker'
-import { FIELD_UPLOAD, FIELD_WYSIWYG, FIELD_DATERANGEPICKER, FIELD_CHECKBOX, CLASS_FIELD_CHECKBOX, CLASS_LABEL_CHECKBOX } from '../constants/field'
+import DatePicker from '../components/DatePicker'
+import {
+  FIELD_UPLOAD,
+  FIELD_WYSIWYG,
+  FIELD_DATERANGEPICKER,
+  FIELD_DATEPICKER,
+  FIELD_CHECKBOX,
+  CLASS_FIELD_CHECKBOX,
+  CLASS_LABEL_CHECKBOX,
+} from '../constants/field'
 
 const withFormComponents = compose(
   mapProps((props) => {
@@ -72,29 +81,33 @@ const withFormComponents = compose(
               form,
               required,
               props,
+              label,
               ...rest
             } = fieldProps
             const isInRecord = has(form, path || name) // form must contain this key
             const show = isInRecord || required // show optional fields only on update
+            const Label = (wrappedLabelProps) => {
+              return (
+                <label htmlFor={name} {...label} {...wrappedLabelProps}>
+                  {startCase(name)}
+                </label>
+              )
+            }
             if (show) {
               switch (type) {
                 case FIELD_WYSIWYG: {
                   return (
                     <Form.Field key={key} required={required}>
-                      <label htmlFor={name}>
-                        {startCase(name)}
-                      </label>
+                      <Label />
                       <Wysiwyg name={name} initialValue={form[name]} onChange={handleChange} {...props} />
                     </Form.Field>
                   )
                 }
                 case FIELD_UPLOAD: {
-                  const { label, field, ...upload } = rest
+                  const { field, ...upload } = rest
                   return (
                     <Form.Field key={key} required={required} {...field}>
-                      <label htmlFor={name} {...label}>
-                        {startCase(name)}
-                      </label>
+                      <Label />
                       <Component
                         style={{ marginBottom: '1.5em' }}
                         field={name}
@@ -108,10 +121,10 @@ const withFormComponents = compose(
                   )
                 }
                 case FIELD_DATERANGEPICKER: {
-                  const { dateFields, label, dateRangePicker } = rest
+                  const { dateFields, dateRangePicker } = rest
                   return (
-                    <Form.Field key={key}>
-                      <label htmlFor={name} {...label}>{startCase(name)}</label>
+                    <Form.Field key={key} required={required}>
+                      <Label />
                       <DateRangePicker
                         onChange={handleChange}
                         dateFields={dateFields}
@@ -121,11 +134,24 @@ const withFormComponents = compose(
                     </Form.Field>
                   )
                 }
+                case FIELD_DATEPICKER: {
+                  return (
+                    <Form.Field key={key} required={required}>
+                      <Label />
+                      <DatePicker
+                        id={name} // Add id for htmlFor from label
+                        name={name} // Add name to set key in form state
+                        onChange={handleChange}
+                        value={value} // To set defaultValue
+                        {...props} />
+                    </Form.Field>
+                  )
+                }
                 case FIELD_CHECKBOX: {
-                  const { hidden, label } = rest
+                  const { hidden } = rest
                   return (
                     <Form.Field className={CLASS_FIELD_CHECKBOX} key={key} hidden={hidden} required={required}>
-                      <label htmlFor={name} className={CLASS_LABEL_CHECKBOX} {...label}>{startCase(name)}</label>
+                      <Label className={CLASS_LABEL_CHECKBOX} />
                       <Checkbox
                         toggle
                         id={name}
