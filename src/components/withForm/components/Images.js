@@ -63,7 +63,7 @@ class Images extends React.Component {
     if (uploadConfig) {
       const { url, token } = uploadConfig
       defaultProps.action = url
-      defaultProps.token = token
+      defaultProps.headers = { Authorization: token }
     }
 
     return (
