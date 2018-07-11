@@ -25,12 +25,16 @@ type FieldsType = Array<{
 }>
 
 type OptionsType = {
+  preSubmit?: Function,
+  postSubmit?: Function,
   props?: {
     basic?: boolean, // creates a basic form
     submitButton?: Object, // react-semantic-ui button props
   },
-  preSubmit?: Function,
-  postSubmit?: Function,
+  uploadConfig?: {
+    url: string,
+    token: Function,
+  },
 }
 
 /**
@@ -58,7 +62,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
   }
 
   /**
-   * Define field props in an array of objects for form to render later
+   *  Define field props in an array of objects for form to render later
    */
   const withFormFields = compose(
     mapProps((props) => {
@@ -116,8 +120,33 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
         return enhancedFields.push(enhancedField)
       })
 
-      return { ...props, fields: enhancedFields, ...options.props }
+      return { ...props, fields: enhancedFields }
     }),
+  )
+
+  /**
+   * Add form option props to pass into form components
+   */
+  const withFormOptions = compose(
+    mapProps((props) => {
+      const { uploadConfig } = options
+
+      const nextProps = {
+        ...props,
+        ...options.props,
+      }
+
+      if (uploadConfig) {
+        nextProps.uploadConfig = { ...uploadConfig }
+        // Resolve token else use default token path
+        const { token } = uploadConfig
+        const shouldResolveToken = token && typeof token === 'function'
+        const defaultToken = props.user ? props.user.token : ''
+        nextProps.uploadConfig.token = shouldResolveToken ? token(props) : defaultToken
+      }
+
+      return nextProps
+    })
   )
 
   /**
@@ -307,7 +336,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
     }),
   )
 
-  return withFormHandlers(withFormFields(withFormComponents(Component)))
+  return withFormHandlers(withFormFields(withFormOptions(withFormComponents(Component))))
 }
 
 export default withForm

@@ -82,18 +82,26 @@ class Wysiwyg extends React.Component {
   }
 
   uploadImage = (file) => {
-    const { user: { token }, uploadUrl: UPLOAD_URL } = this.props
+    const {
+      uploadConfig,
+      user: { token },
+      uploadUrl: UPLOAD_URL,
+    } = this.props
     return new Promise(async (resolve, reject) => {
       try {
         const form = new FormData()
         form.append('file', file)
         form.append('model', 'User')
         form.append('field', 'avatar')
-        const response = await fetch(UPLOAD_URL, {
+
+        const uploadUrl = uploadConfig ? uploadConfig.url : UPLOAD_URL
+        const authHeader = uploadConfig ? uploadConfig.token : token
+        const response = await fetch(uploadUrl, {
           method: 'POST',
-          headers: { Authorization: token },
+          headers: { Authorization: authHeader },
           body: form,
         })
+
         const data = await response.json()
         return data.ok ? resolve({ data: { link: data.src } }) : reject(data)
       } catch (err) {
@@ -139,11 +147,16 @@ Wysiwyg.propTypes = {
   onChange: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   uploadUrl: PropTypes.string.isRequired,
+  uploadConfig: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    token: PropTypes.string,
+  }),
   initialValue: PropTypes.string,
 }
 
 Wysiwyg.defaultProps = {
   initialValue: undefined,
+  uploadConfig: undefined,
 }
 
 export default Wysiwyg

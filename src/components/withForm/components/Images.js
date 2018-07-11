@@ -56,7 +56,15 @@ class Images extends React.Component {
 
   render() {
     const { previewVisible, previewImage, fileList } = this.state
-    const { upload } = this.props
+    const { upload, uploadConfig } = this.props
+
+    const defaultProps = {}
+
+    if (uploadConfig) {
+      const { url, token } = uploadConfig
+      defaultProps.url = url
+      defaultProps.token = token
+    }
 
     return (
       <div>
@@ -65,6 +73,7 @@ class Images extends React.Component {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
+          {...defaultProps}
           {...upload}
         >
           {
@@ -92,10 +101,15 @@ Images.propTypes = {
     id: PropTypes.number.isRequired,
     src: PropTypes.string.isRequired,
   })),
+  uploadConfig: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    token: PropTypes.string,
+  }),
 }
 
 Images.defaultProps = {
   value: undefined,
+  uploadConfig: undefined,
 }
 
 export default Images

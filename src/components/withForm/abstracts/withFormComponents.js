@@ -22,7 +22,7 @@ import {
 
 const withFormComponents = compose(
   mapProps((props) => {
-    const { record, handleSubmit, state, fields, submitButton } = props
+    const { record, handleSubmit, state, fields, submitButton, uploadConfig } = props
     const { loading, errors, form, pristine } = state
     const components = {}
 
@@ -105,7 +105,13 @@ const withFormComponents = compose(
                   return (
                     <Form.Field key={key} required={required}>
                       <Label />
-                      <Wysiwyg name={name} initialValue={form[name]} onChange={handleChange} {...props} />
+                      <Wysiwyg
+                        name={name}
+                        initialValue={form[name]}
+                        onChange={handleChange}
+                        uploadConfig={uploadConfig}
+                        {...props}
+                      />
                     </Form.Field>
                   )
                 }
@@ -120,6 +126,7 @@ const withFormComponents = compose(
                         id={name}
                         onUpload={handleChange}
                         src={form[name]}
+                        uploadConfig={uploadConfig}
                         {...upload}
                         {...props}
                       />
@@ -180,6 +187,7 @@ const withFormComponents = compose(
                         onChange={handleChange}
                         value={value}
                         upload={upload}
+                        uploadConfig={uploadConfig}
                         style={{ marginBottom: '1.5em' }}
                         {...props}
                       />
