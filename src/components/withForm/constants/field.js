@@ -3,6 +3,7 @@ export const FIELD_WYSIWYG = 'FIELD_WYSIWYG'
 export const FIELD_DATERANGEPICKER = 'FIELD_DATERANGEPICKER'
 export const FIELD_CHECKBOX = 'FIELD_CHECKBOX'
 export const FIELD_DATEPICKER = 'FIELD_DATEPICKER'
+export const FIELD_IMAGES = 'FIELD_IMAGES'
 
 export const CLASS_FIELD_CHECKBOX = 'field-checkbox'
 export const CLASS_LABEL_CHECKBOX = 'label-checkbox'

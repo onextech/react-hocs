@@ -9,11 +9,29 @@ import {
   FIELD_CHECKBOX,
   FIELD_DATERANGEPICKER,
   FIELD_DATEPICKER,
+  FIELD_IMAGES,
 } from './constants/field'
 
 const fields = [
   {
-    name: 'name', required: true,
+    name: 'name',
+    required: true,
+  },
+  {
+    name: 'images',
+    label: 'Gallery',
+    required: true,
+    type: FIELD_IMAGES,
+    upload: {
+      // action: '//jsonplaceholder.typicode.com/posts/',
+      // headers: {
+      //   Authorization: 'token',
+      // },
+      data: {
+        model: 'Name',
+        field: 'Somewhere',
+      },
+    },
   },
   {
     name: 'eventDate',
@@ -98,6 +116,7 @@ const DemoForm = withForm(fields, {
       ...form,
       organizations: form.teacher.organizations,
       isModerator: form.teacher.isModerator,
+      images: form.images.map(({ src }) => src),
     }
   },
 })
@@ -105,6 +124,13 @@ const DemoForm = withForm(fields, {
 const demoRecord = {
   id: 1,
   name: null,
+  images: [
+    {
+      id: 1,
+      src: '//s3-ap-southeast-1.amazonaws.com/express-graphql-boilerplate-test/banquet/heroImage/5b6193d8c2ba14a0f8e042a84efce2e3.jpg',
+      path: 'banquet/heroImage',
+    },
+  ],
   eventDate: 'Wed Jul 11 2018 13:04:35 GMT+0800 (+08)',
   country: 2,
   user: { id: 1, email: 'hello@meme.com' },
@@ -121,6 +147,22 @@ const demoRecord = {
   },
 }
 
+const BasicDemoForm = withForm(fields, {
+  props: {
+    basic: true,
+    submitButton: {
+      size: null,
+      positive: false,
+      style: {
+        display: 'block',
+        marginLeft: 'auto',
+      },
+      content: 'Reset password and log in',
+    },
+  },
+})
+
 storiesOf('withForm', module)
   .add('Update', () => <DemoForm record={demoRecord} />)
   .add('Create', () => <DemoForm />)
+  .add('Basic', () => <BasicDemoForm />)

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { compose, mapProps } from 'recompose'
 import { Button, Checkbox, Form, Message, Dimmer, Loader } from 'semantic-ui-react'
 import startCase from 'lodash/startCase'
@@ -6,6 +7,7 @@ import has from 'lodash/has'
 import Field from '../components/Field'
 import Wysiwyg from '../components/Wysiwyg'
 import DateRangePicker from '../components/DateRangePicker'
+import Images from '../components/Images'
 import DatePicker from '../components/DatePicker'
 import {
   FIELD_UPLOAD,
@@ -15,6 +17,7 @@ import {
   FIELD_CHECKBOX,
   CLASS_FIELD_CHECKBOX,
   CLASS_LABEL_CHECKBOX,
+  FIELD_IMAGES,
 } from '../constants/field'
 
 const withFormComponents = compose(
@@ -43,6 +46,9 @@ const withFormComponents = compose(
           {...submitButton}
         />
       )
+    }
+    components.renderSubmitButton.propTypes = {
+      submitButton: PropTypes.object, // react-semantic button props
     }
 
     components.renderErrors = () => {
@@ -159,6 +165,23 @@ const withFormComponents = compose(
                         onChange={handleChange}
                         checked={Boolean(value)}
                         path={path}
+                      />
+                    </Form.Field>
+                  )
+                }
+                case FIELD_IMAGES: {
+                  const { upload } = rest
+                  return (
+                    <Form.Field key={key} required={required}>
+                      <Label />
+                      <Images
+                        id={name}
+                        name={name}
+                        onChange={handleChange}
+                        value={value}
+                        upload={upload}
+                        style={{ marginBottom: '1.5em' }}
+                        {...props}
                       />
                     </Form.Field>
                   )

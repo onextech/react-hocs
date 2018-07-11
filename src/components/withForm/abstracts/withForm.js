@@ -25,7 +25,10 @@ type FieldsType = Array<{
 }>
 
 type OptionsType = {
-  props?: Object,
+  props?: {
+    basic?: boolean, // creates a basic form
+    submitButton?: Object, // react-semantic-ui button props
+  },
   preSubmit?: Function,
   postSubmit?: Function,
 }
