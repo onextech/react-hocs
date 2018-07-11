@@ -58,8 +58,6 @@ class Images extends React.Component {
     const { previewVisible, previewImage, fileList } = this.state
     const { upload, uploadConfig } = this.props
 
-    console.log('uploadConfig at images', { ...uploadConfig, ...upload })
-
     return (
       <div>
         <Upload
