@@ -30,6 +30,8 @@ class Images extends React.Component {
     })
   }
 
+  // TODO: Debug handleChange not setting fileList in right shape
+  // TODO: Debug handleChange not setting form state value
   handleChange = ({ file: { status, response }, fileList, event: e }) => {
     const { name, onChange: handleChange } = this.props
     switch (status) {
