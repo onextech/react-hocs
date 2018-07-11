@@ -137,12 +137,16 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
       }
 
       if (uploadConfig) {
-        nextProps.uploadConfig = { ...uploadConfig }
+        nextProps.uploadConfig = {}
         // Resolve token else use default token path
-        const { token } = uploadConfig
+        const { token, url } = uploadConfig
+        // 1. Add uploadConfig action
+        nextProps.uploadConfig.action = url
+        // 2. Add uploadConfig headers
         const shouldResolveToken = token && typeof token === 'function'
         const defaultToken = props.user ? props.user.token : ''
-        nextProps.uploadConfig.token = shouldResolveToken ? token(props) : defaultToken
+        const nextToken = shouldResolveToken ? token(props) : defaultToken
+        nextProps.uploadConfig.headers = { Authorization: nextToken }
       }
 
       return nextProps

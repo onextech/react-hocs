@@ -94,8 +94,8 @@ class Wysiwyg extends React.Component {
         form.append('model', 'User')
         form.append('field', 'avatar')
 
-        const uploadUrl = uploadConfig ? uploadConfig.url : UPLOAD_URL
-        const authHeader = uploadConfig ? uploadConfig.token : token
+        const uploadUrl = uploadConfig ? uploadConfig.action.url : UPLOAD_URL
+        const authHeader = uploadConfig ? uploadConfig.headers.Authorization.token : token
         const response = await fetch(uploadUrl, {
           method: 'POST',
           headers: { Authorization: authHeader },
@@ -148,8 +148,10 @@ Wysiwyg.propTypes = {
   user: PropTypes.object,
   uploadUrl: PropTypes.string,
   uploadConfig: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    token: PropTypes.string,
+    action: PropTypes.string.isRequired, // upload url
+    headers: PropTypes.shape({
+      Authorization: PropTypes.string, // user token
+    }).isRequired,
   }),
   initialValue: PropTypes.string,
 }
