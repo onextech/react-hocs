@@ -132,6 +132,20 @@ Return object with prefilled data
 
 Returns **{}** 
 
+### setDefaultValue
+
+Set defaultValue of date-related components
+with values extracted from graphql responses.
+Note that we have to set initialise a new JS date object
+before passing it to moment for ant design's consumption
+
+**Parameters**
+
+-   `value` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `fallbackValue` **any**  (optional, default `null`)
+
+Returns **(Moment | any)** 
+
 ### Field
 
 Return Semantic UI Field

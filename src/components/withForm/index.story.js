@@ -17,6 +17,7 @@ const fields = [
   },
   {
     name: 'eventDate',
+    label: 'Date of Event',
     required: true,
     type: FIELD_DATEPICKER,
   },

@@ -88,8 +88,8 @@ const withFormComponents = compose(
             const show = isInRecord || required // show optional fields only on update
             const Label = (wrappedLabelProps) => {
               return (
-                <label htmlFor={name} {...label} {...wrappedLabelProps}>
-                  {startCase(name)}
+                <label htmlFor={name} {...wrappedLabelProps}>
+                  {label || startCase(name)}
                 </label>
               )
             }
