@@ -3,11 +3,6 @@ import * as React from 'react'
 import PropTypes from 'prop-types'
 import { Upload, Icon, Modal } from 'antd'
 
-type ValueType = Array<{
-  id: number,
-  src: string,
-}>
-
 type PropsType = {
   name: string,
   onChange: Function,
@@ -22,8 +17,29 @@ type StateType = {
   fileList: Array<Object>,
 }
 
+type ResponseType = {
+  ok: boolean,
+  src: string,
+  path: string,
+}
+
+type ValueType = Array<{
+  id: number,
+  src: string,
+  path: string,
+}>
+
+type FileListType = Array<{
+  response?: ResponseType
+}>
+
+/**
+ * Convert form `value` to `fileList` prop for component
+ * @param value
+ * @return {ValueType|arg is Array<any>|any[]}
+ */
 const valueToFileList = (value: ValueType) => {
-  return value && Array.isArray(value) && value.map(({ id, src }) => {
+  return value && Array.isArray(value) && value.map(({ id, src, path }) => {
     return {
       uid: id,
       status: 'done',
@@ -31,13 +47,19 @@ const valueToFileList = (value: ValueType) => {
       // Return default values for update
       id,
       src,
+      path,
     }
   })
 }
 
-const fileListToValue = (fileList: Array<{ response?: Object }>) => {
+/**
+ * Convert `fileList` component prop to form `value`
+ * @param {[{}]} fileList
+ * @return {any[]}
+ */
+const fileListToValue = (fileList: FileListType) => {
   return fileList.map((file, i) => {
-    const { response } = file
+    const { response }: { response?: ResponseType } = file
     const isUploadSuccess = response && response.ok
     // Not nextFile because literally this is a new file to append.
     const newFile = {
