@@ -1,59 +1,86 @@
-import React from 'react'
+// @flow
+import * as React from 'react'
 import PropTypes from 'prop-types'
-import { Upload, Icon, Modal, message } from 'antd'
-import { TYPENAME_FILE } from '../constants/typename'
-import { MESSAGE_UPLOAD_SUCCESS, MESSAGE_UPLOAD_FAILURE } from '../constants/message'
+import { Upload, Icon, Modal } from 'antd'
 
-class Images extends React.Component {
-  state = {
+type ValueType = Array<{
+  id: number,
+  src: string,
+}>
+
+type PropsType = {
+  name: string,
+  onChange: Function,
+  value?: Array<Object>,
+  upload?: Object,
+  uploadConfig?: Object,
+}
+
+type StateType = {
+  previewVisible: boolean,
+  previewImage: string,
+  fileList: Array<Object>,
+}
+
+const valueToFileList = (value: ValueType) => {
+  return value && Array.isArray(value) && value.map(({ id, src }) => {
+    return {
+      uid: id,
+      status: 'done',
+      url: src,
+      // Return default values for update
+      id,
+      src,
+    }
+  })
+}
+
+const fileListToValue = (fileList: Array<{ response?: Object }>) => {
+  return fileList.map((file, i) => {
+    const { response } = file
+    const isUploadSuccess = response && response.ok
+    // Not nextFile because literally this is a new file to append.
+    const newFile = {
+      ...response,
+      // random number for component-consumption only
+      id: i + (fileList.length - 1),
+    }
+    return isUploadSuccess ? newFile : file
+  })
+}
+
+class Images extends React.Component<PropsType, StateType> {
+  state: StateType = {
     previewVisible: false,
     previewImage: '',
-    fileList: (() => {
-      const { value } = this.props
-      const fileList = value && Array.isArray(value) && value.map(({ id, src }) => {
-        return {
-          uid: id,
-          status: 'done',
-          url: src,
-        }
-      })
-      return fileList
-    })(),
+    // $FlowFixMe
+    fileList: valueToFileList(this.props.value),
   }
 
   handleCancel = () => this.setState({ previewVisible: false })
 
-  handlePreview = (file) => {
+  handlePreview = (file: { url: string, thumbUrl: string }) => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     })
   }
 
-  // TODO: Debug handleChange not setting fileList in right shape
-  // TODO: Debug handleChange not setting form state value
-  handleChange = ({ file: { status, response }, fileList, event: e }) => {
+  handleChange = (data: { file: Object, fileList: Object, event: Event}) => {
+    const { file, fileList, event: e } = data
     const { name, onChange: handleChange } = this.props
-    switch (status) {
-      case 'uploading': {
-        return this.setState({ loading: true, src: null })
-      }
-      case 'done': {
-        // Send data back to upstream to set state
-        handleChange(e, { name, value: { ...response, __typename: TYPENAME_FILE } })
+    const { status } = file
 
-        // Update fileList in local state
-        return this.setState({ loading: false, src: response.src, fileList }, () => {
-          message.success(MESSAGE_UPLOAD_SUCCESS)
-        })
-      }
-      case 'error': {
-        return message.error(MESSAGE_UPLOAD_FAILURE)
-      }
-      default: {
-        break
-      }
+    if (status === 'done') {
+      const { fileList } = this.state
+      handleChange(e, {
+        name,
+        value: fileListToValue(fileList),
+      })
     }
+
+    // $FlowFixMe Required to set the component, do not change or condition this
+    return this.setState({ fileList })
   }
 
   render() {
@@ -103,6 +130,7 @@ Images.propTypes = {
   }),
 }
 
+// $FlowFixMe
 Images.defaultProps = {
   value: undefined,
   uploadConfig: undefined,

@@ -316,7 +316,6 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
           let form = getCleanForm(rawForm)
           const requiredFields = getRequiredFields(fields)
           const isFormCompleted = requiredFields.every((requiredField) => has(form, requiredField))
-
           if (isFormCompleted) {
             updateState({ loading: true })
             // Enable dynamic submit actions

@@ -107,7 +107,7 @@ const fields = [
 ]
 
 const DemoForm = withForm(fields, {
-  uploadConfig: { url: '//jsonplaceholder.typicode.com/posts/' },
+  uploadConfig: { url: 'http://localhost:8888/upload' },
   preSubmit: (form) => {
     return {
       ...form,
@@ -159,7 +159,11 @@ const BasicDemoForm = withForm(fields, {
   },
 })
 
+const demoUser = {
+  token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoyfSwiaWF0IjoxNTMxMjg1NDY0LCJleHAiOjE1MzE4OTAyNjR9.6mmtXcsGsPbIWbe2TJ1jCLDlH8_SEl77niks_Cd0XFQ',
+}
+
 storiesOf('withForm', module)
-  .add('Update', () => <DemoForm user={{ token: 'abc' }} record={demoRecord} />)
+  .add('Update', () => <DemoForm user={demoUser} record={demoRecord} />)
   .add('Create', () => <DemoForm />)
   .add('Basic', () => <BasicDemoForm />)
