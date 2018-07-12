@@ -2,6 +2,15 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
 import { Upload, Icon, Modal } from 'antd'
+// $FlowFixMe
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  // Fix issue where thumbnail does not take up full height
+  .ant-upload-list-item-info > span {
+    height: 100%;
+  }
+`
 
 type PropsType = {
   name: string,
@@ -130,7 +139,7 @@ class Images extends React.Component<PropsType, StateType> {
     const { upload, uploadConfig } = this.props
 
     return (
-      <div>
+      <Wrapper>
         <Upload
           listType='picture-card'
           fileList={fileList}
@@ -140,19 +149,13 @@ class Images extends React.Component<PropsType, StateType> {
           {...uploadConfig}
           {...upload}
         >
-          {
-            (fileList && fileList.length >= 3) ?
-            null :
-            <div>
-              <Icon type='plus' />
-              <div className='ant-upload-text'>Upload</div>
-            </div>
-          }
+          <Icon type='plus' />
+          <div className='ant-upload-text'>Upload</div>
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt='example' style={{ width: '100%' }} src={previewImage} />
         </Modal>
-      </div>
+      </Wrapper>
     )
   }
 }
@@ -161,10 +164,13 @@ Images.propTypes = {
   name: PropTypes.string.isRequired,
   upload: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    src: PropTypes.string.isRequired,
-  })),
+  value: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      src: PropTypes.string.isRequired,
+    })),
+    PropTypes.string,
+  ]),
   uploadConfig: PropTypes.shape({
     action: PropTypes.string.isRequired, // upload url
     headers: PropTypes.shape({
