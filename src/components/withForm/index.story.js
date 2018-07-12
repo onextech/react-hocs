@@ -139,12 +139,12 @@ const demoRecord = {
 const DemoForm = withForm(fields, {
   uploadConfig: { url: 'http://localhost:8888/upload' },
   preSubmit: (form) => {
-    return {
-      ...form,
-      organizations: form.teacher.organizations,
-      isModerator: form.teacher.isModerator,
-      images: form.images.map(({ path }) => path),
-    }
+    const nextForm = { ...form }
+    const { teacher, images } = form
+    if (teacher && teacher.organizations) nextForm.organizations = form.teacher.organizations
+    if (teacher && teacher.isModerator) nextForm.isModerator = form.teacher.isModerator
+    if (images && images.length) nextForm.images = images.map(({ path }) => path)
+    return nextForm
   },
 })
 

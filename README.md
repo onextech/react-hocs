@@ -166,6 +166,24 @@ Return Semantic UI Field
     -   `$0.hidden`  
     -   `$0.rest` **...any** 
 
+### valueToFileList
+
+Convert form `value` to `fileList` prop for component
+
+**Parameters**
+
+-   `value` **ValueType** 
+
+### fileListToValue
+
+Convert `fileList` component prop to form `value`
+
+**Parameters**
+
+-   `fileList` **\[{}]** 
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;any>** 
+
 ### makeSelectOptionsFromConstants
 
 Make field select options

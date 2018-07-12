@@ -33,10 +33,19 @@ type FileListType = Array<{
   response?: ResponseType
 }>
 
+type FileType = {
+  id: number,
+  path: string,
+  src: string,
+  status: 'loading' | 'done' | 'error' | 'removed',
+  uid: number,
+  url: string,
+}
+
 /**
- * Convert form `value` to `fileList` prop for component
- * @param value
- * @return {ValueType|arg is Array<any>|any[]}
+ * Convert form `value` to `fileList` component prop
+ * @param {[{}]} value
+ * @return
  */
 const valueToFileList = (value: ValueType) => {
   return value && Array.isArray(value) && value.map(({ id, src, path }) => {
@@ -88,21 +97,32 @@ class Images extends React.Component<PropsType, StateType> {
     })
   }
 
-  handleChange = (data: { file: Object, fileList: Object, event: Event}) => {
-    const { file, fileList, event: e } = data
+  updateForm = (fileList: FileListType, e?: Event | null = null) => {
     const { name, onChange: handleChange } = this.props
+    const nextValue = fileListToValue(fileList)
+    return handleChange(e, { name, value: nextValue })
+  }
+
+  handleChange = (data: { file: Object, fileList: Object, event: Event }) => {
+    const { file, fileList, event: e } = data
     const { status } = file
 
     if (status === 'done') {
       const { fileList } = this.state
-      handleChange(e, {
-        name,
-        value: fileListToValue(fileList),
-      })
+      this.updateForm(fileList, e)
     }
 
     // $FlowFixMe Required to set the component, do not change or condition this
     return this.setState({ fileList })
+  }
+
+  handleRemove = (file: FileType) => {
+    const { id } = file
+    const { fileList: prevFileList } = this.state
+    const activeFiles = (file) => file.id !== id
+    const nextFileList = prevFileList.filter(activeFiles)
+    this.updateForm(nextFileList)
+    return this.setState({ fileList: nextFileList })
   }
 
   render() {
@@ -116,6 +136,7 @@ class Images extends React.Component<PropsType, StateType> {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={this.handleChange}
+          onRemove={this.handleRemove}
           {...uploadConfig}
           {...upload}
         >
