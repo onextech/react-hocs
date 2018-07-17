@@ -1,6 +1,6 @@
 {
   "name": "@onextech/react-hocs",
-  "version": "0.0.44",
+  "version": "0.0.45",
   "description": "Higher Order Components for react",
   "license": "MIT",
   "repository": "onextech/react-hocs",

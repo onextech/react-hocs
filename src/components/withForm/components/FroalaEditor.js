@@ -10,6 +10,7 @@ import 'font-awesome/css/font-awesome.css'
 
 import FroalaEditor from 'react-froala-wysiwyg'
 
+/* global window */
 /* eslint-disable global-require */
 if (window && typeof window !== 'undefined') {
   // Require Editor JS files.
