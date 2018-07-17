@@ -5,7 +5,7 @@ import { Button, Checkbox, Form, Message, Dimmer, Loader } from 'semantic-ui-rea
 import startCase from 'lodash/startCase'
 import has from 'lodash/has'
 import Field from '../components/Field'
-import Wysiwyg from '../components/Wysiwyg'
+import Editor from '../components/FroalaEditor'
 import DateRangePicker from '../components/DateRangePicker'
 import Images from '../components/Images'
 import DatePicker from '../components/DatePicker'
@@ -105,9 +105,9 @@ const withFormComponents = compose(
                   return (
                     <Form.Field key={key} required={required}>
                       <Label />
-                      <Wysiwyg
+                      <Editor
                         name={name}
-                        initialValue={form[name]}
+                        value={form[name]}
                         onChange={handleChange}
                         uploadConfig={uploadConfig}
                         {...props}

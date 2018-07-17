@@ -168,11 +168,11 @@ Return Semantic UI Field
 
 ### valueToFileList
 
-Convert form `value` to `fileList` prop for component
+Convert form `value` to `fileList` component prop
 
 **Parameters**
 
--   `value` **ValueType** 
+-   `value` **\[{}]** 
 
 ### fileListToValue
 
