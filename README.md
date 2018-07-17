@@ -150,6 +150,16 @@ before passing it to moment for ant design's consumption
 
 Returns **(Moment | any)** 
 
+### FroalaEditor
+
+Fix issues with SSR
+(Require Editor JS files)
+
+### FroalaEditorView
+
+Fix issues with SSR
+(Require Editor JS files)
+
 ### Field
 
 Return Semantic UI Field
@@ -165,16 +175,6 @@ Return Semantic UI Field
     -   `$0.required`  
     -   `$0.hidden`  
     -   `$0.rest` **...any** 
-
-### FroalaEditor
-
-Fix issues with SSR
-(Require Editor JS files)
-
-### FroalaEditorView
-
-Fix issues with SSR
-(Require Editor JS files)
 
 ### valueToFileList
 
