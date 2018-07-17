@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 /**
  * Fix issues with SSR
@@ -13,9 +14,19 @@ if (typeof window !== 'undefined') {
 }
 
 const EditorView = (props) => {
+  if (FroalaEditorView) {
+    return (
+      <FroalaEditorView {...props} />
+    )
+  }
+  // SSR render
   return (
-    <FroalaEditorView {...props} />
+    <div dangerouslySetInnerHTML={{ __html: props.model }} />
   )
+}
+
+EditorView.propTypes = {
+  model: PropTypes.string, // The value of the editor
 }
 
 export default EditorView
