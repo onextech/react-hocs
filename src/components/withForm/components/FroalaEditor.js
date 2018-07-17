@@ -1,9 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// Require Editor JS files.
-import 'froala-editor/js/froala_editor.pkgd.min'
-
 // Require Editor CSS files.
 import 'froala-editor/css/froala_style.min.css'
 import 'froala-editor/css/froala_editor.pkgd.min.css'
@@ -12,6 +9,14 @@ import 'froala-editor/css/froala_editor.pkgd.min.css'
 import 'font-awesome/css/font-awesome.css'
 
 import FroalaEditor from 'react-froala-wysiwyg'
+
+/* eslint-disable global-require */
+if (typeof window !== 'undefined') {
+  // Require Editor JS files.
+  require('froala-editor/js/froala_editor.pkgd.min')
+}
+/* eslint-enable global-require */
+
 
 class Editor extends React.Component {
   state = {
