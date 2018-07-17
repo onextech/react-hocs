@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -19,7 +20,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['isomorphic-style-loader', 'css-loader'],
+        use: ExtractTextPlugin.extract({
+          fallback: 'isomorphic-style-loader',
+          use: 'css-loader',
+        }),
       },
       {
         test: /\.less$/,
@@ -81,6 +85,9 @@ module.exports = {
     },
   },
   plugins: [
+    new ExtractTextPlugin({
+      filename: 'react-hocs.css',
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
