@@ -169,6 +169,7 @@ Return Semantic UI Field
 ### require
 
 Fix issues with SSR
+(Require Editor JS files)
 
 ### valueToFileList
 

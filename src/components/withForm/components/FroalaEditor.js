@@ -3,16 +3,17 @@ import PropTypes from 'prop-types'
 import 'froala-editor/css/froala_style.min.css'
 import 'froala-editor/css/froala_editor.pkgd.min.css'
 import 'font-awesome/css/font-awesome.css'
-import FroalaEditor from 'react-froala-wysiwyg'
 
 /**
  * Fix issues with SSR
  * (Require Editor JS files)
  * @link https://github.com/froala/react-froala-wysiwyg/issues/35
  */
+let FroalaEditor
 if (typeof window !== 'undefined') {
   /* eslint-disable global-require */
   require('froala-editor/js/froala_editor.pkgd.min')
+  FroalaEditor = require('react-froala-wysiwyg').default
   /* eslint-enable global-require */
 }
 
