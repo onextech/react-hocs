@@ -166,7 +166,7 @@ Return Semantic UI Field
     -   `$0.hidden`  
     -   `$0.rest` **...any** 
 
-### FroalaEditor
+### require
 
 Fix issues with SSR
 
