@@ -171,6 +171,11 @@ Return Semantic UI Field
 Fix issues with SSR
 (Require Editor JS files)
 
+### FroalaEditorView
+
+Fix issues with SSR
+(Require Editor JS files)
+
 ### valueToFileList
 
 Convert form `value` to `fileList` component prop

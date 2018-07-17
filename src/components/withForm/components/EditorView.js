@@ -8,7 +8,7 @@ import React from 'react'
 let FroalaEditorView
 if (typeof window !== 'undefined') {
   /* eslint-disable global-require */
-  FroalaEditorView = require('react-froala-wysiwyg/FroalaEditorView')
+  FroalaEditorView = require('react-froala-wysiwyg/FroalaEditorView').default
   /* eslint-enable global-require */
 }
 

@@ -5,7 +5,7 @@ import { Button, Checkbox, Form, Message, Dimmer, Loader } from 'semantic-ui-rea
 import startCase from 'lodash/startCase'
 import has from 'lodash/has'
 import Field from '../components/Field'
-import Editor from '../components/FroalaEditor'
+import Editor from '../components/Editor'
 import DateRangePicker from '../components/DateRangePicker'
 import Images from '../components/Images'
 import DatePicker from '../components/DatePicker'
