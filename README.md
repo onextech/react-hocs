@@ -166,6 +166,10 @@ Return Semantic UI Field
     -   `$0.hidden`  
     -   `$0.rest` **...any** 
 
+### FroalaEditor
+
+Fix issues with SSR
+
 ### valueToFileList
 
 Convert form `value` to `fileList` component prop

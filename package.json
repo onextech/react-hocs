@@ -47,6 +47,7 @@
     "font-awesome": "^4.7.0",
     "form-data": "^2.3.2",
     "froala-editor": "^2.8.4",
+    "global": "^4.3.2",
     "html-to-draftjs": "^1.4.0",
     "less": "^3.5.2",
     "less-loader": "^4.1.0",

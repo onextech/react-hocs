@@ -1,27 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+/* eslint-disable no-unused-vars */
+import window from 'global'
 
-// Require Editor CSS files.
+import 'froala-editor/js/froala_editor.pkgd.min'
 import 'froala-editor/css/froala_style.min.css'
 import 'froala-editor/css/froala_editor.pkgd.min.css'
-
-// Require Font Awesome.
 import 'font-awesome/css/font-awesome.css'
-
-/**
- * Fix issues with SSR
- * @link https://github.com/froala/react-froala-wysiwyg/issues/35
- */
-/* global window */
-/* eslint-disable global-require */
-let FroalaEditor
-if (window && typeof window !== 'undefined') {
-  // Require Editor JS files.
-  require('froala-editor/js/froala_editor.pkgd.min')
-  FroalaEditor = require('react-froala-wysiwyg')
-}
-/* eslint-enable global-require */
-
+import FroalaEditor from 'react-froala-wysiwyg'
 
 class Editor extends React.Component {
   state = {
