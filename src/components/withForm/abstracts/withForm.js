@@ -35,6 +35,7 @@ type OptionsType = {
     url: string,
     token: Function,
   },
+  editorConfig?: Object, // https://github.com/froala/react-froala-wysiwyg#options
 }
 
 /**
@@ -129,11 +130,12 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
    */
   const withFormOptions = compose(
     mapProps((props) => {
-      const { uploadConfig } = options
+      const { uploadConfig, editorConfig } = options
 
       const nextProps = {
         ...props,
         ...options.props,
+        editorConfig,
       }
 
       if (uploadConfig) {

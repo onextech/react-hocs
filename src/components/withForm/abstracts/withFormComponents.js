@@ -22,7 +22,7 @@ import {
 
 const withFormComponents = compose(
   mapProps((props) => {
-    const { record, handleSubmit, state, fields, submitButton, uploadConfig } = props
+    const { record, handleSubmit, state, fields, submitButton, uploadConfig, editorConfig } = props
     const { loading, errors, form, pristine } = state
     const components = {}
 
@@ -109,7 +109,7 @@ const withFormComponents = compose(
                         name={name}
                         value={form[name]}
                         onChange={handleChange}
-                        uploadConfig={uploadConfig}
+                        editorConfig={editorConfig}
                         {...props}
                       />
                     </Form.Field>

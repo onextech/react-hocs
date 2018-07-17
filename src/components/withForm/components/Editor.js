@@ -22,17 +22,6 @@ class Editor extends React.Component {
     model: this.props.value || '',
   }
 
-  config = {
-    toolbarButtons: [
-      'fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', '|',
-      'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|',
-      'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-',
-      'insertLink', 'insertImage', 'insertVideo', 'embedly', 'insertFile', 'insertTable', '|',
-      'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|',
-      'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo',
-    ],
-  }
-
   handleModelChange = (model) => {
     const { onChange: handleChange, name } = this.props
     this.setState({ model })
@@ -40,11 +29,24 @@ class Editor extends React.Component {
   }
 
   render() {
+    const { editorConfig } = this.props
+
+    const defaultConfig = {
+      toolbarButtons: [
+        'fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', '|',
+        'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|',
+        'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-',
+        'insertLink', 'insertImage', 'insertVideo', 'embedly', 'insertFile', 'insertTable', '|',
+        'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|',
+        'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo',
+      ],
+    }
+
     return (
       <div>
         <FroalaEditor
           tag='textarea'
-          config={this.config}
+          config={{ ...defaultConfig, ...editorConfig }}
           model={this.state.model}
           onModelChange={this.handleModelChange}
         />
@@ -57,10 +59,12 @@ Editor.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string,
+  editorConfig: PropTypes.object,
 }
 
 Editor.defaultProps = {
   value: '',
+  editorConfig: undefined,
 }
 
 export default Editor

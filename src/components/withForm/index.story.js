@@ -138,6 +138,7 @@ const demoRecord = {
 
 const DemoForm = withForm(fields, {
   uploadConfig: { url: 'http://localhost:8888/upload' },
+  editorConfig: { key: 'XYZ' },
   preSubmit: (form) => {
     const nextForm = { ...form }
     const { teacher, images } = form
