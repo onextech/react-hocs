@@ -164,6 +164,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
     ...withSetState({
       form: {},
       savedRecord: {},
+      updatedKeys: [], // keys of fields that have been updated by the user. Mainly for doing pristine checks
       pristine: true,
       success: false,
       failure: false,
@@ -219,10 +220,13 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
     }),
     withHandlers({
       handleChange: (props) => (e, data) => {
-        const { state: { form, savedRecord }, updateState } = props
+        const { state: { form, savedRecord, updatedKeys }, updateState } = props
         const { name, value, path, checked, start, end } = data
+        const pathname = path || name
+
         // value can be string or checked boolean
         const nextValue = typeof checked === 'boolean' ? checked : value
+
         // check for Daterangepicker onchange to diverge onchange behaviour
         const hasNoNextValue = typeof nextValue === 'undefined'
         if (hasNoNextValue && start && end) {
@@ -233,13 +237,34 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
           })
           return updateState({ pristine, form: { ...form, ...records } })
         }
-        // check if form is pristine
-        const pristine = savedRecord[name] === nextValue
+
         // check if value to set is nested
         const prevForm = path ? cloneDeep(form) : { ...form }
-        const nextForm = set(prevForm, path || name, nextValue)
+        const nextForm = set(prevForm, pathname, nextValue)
+
+        // check if form is pristine
+        const getSavedValue = (savedRecord, pathname) => {
+          const savedValue = get(savedRecord, pathname)
+          // Fix fringe cases where savedValue isNull and nextValue = ''. Causing issues with isFieldUpdated check
+          return savedValue === null ? '' : savedValue
+        }
+        const setUpdatedKeys = (updatedKeys, savedValue, nextValue) => {
+          let nextUpdatedKeys = [...updatedKeys]
+          const isFieldUpdated = savedValue !== nextValue
+          if (isFieldUpdated) {
+            const isNotAlreadyUpdated = !nextUpdatedKeys.includes(pathname)
+            if (isNotAlreadyUpdated) nextUpdatedKeys.push(pathname)
+          } else {
+            nextUpdatedKeys = nextUpdatedKeys.filter((k) => k !== (pathname))
+          }
+          return nextUpdatedKeys
+        }
+        const savedValue = getSavedValue(savedRecord, pathname)
+        const nextUpdatedKeys = setUpdatedKeys(updatedKeys, savedValue, nextValue)
+        const pristine = !nextUpdatedKeys.length
+
         // update state with next value
-        updateState({ pristine, form: nextForm })
+        updateState({ pristine, form: nextForm, updatedKeys: nextUpdatedKeys })
       },
       handleFailure: (props) => (errors) => {
         const { updateState } = props
