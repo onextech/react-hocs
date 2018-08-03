@@ -6,8 +6,8 @@
   "repository": "onextech/react-hocs",
   "author": {
     "name": "One X Tech",
-    "email": "hello@onextech.co",
-    "url": "github.com/onextech"
+    "email": "hello@onextech.com",
+    "url": "https://www.github.com/onextech"
   },
   "main": "dist/index.js",
   "files": [
