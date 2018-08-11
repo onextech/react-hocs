@@ -354,6 +354,11 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
             const { ok, validationErrors } = result
             return ok ? handleSuccess(result) : handleFailure(validationErrors)
           }
+          return handleFailure([{
+            title: 'Incomplete Form',
+            message: 'Required fields (marked with *) are not filled. Please fill them before submitting.',
+            key: 0,
+          }])
         } catch (err) {
           const networkError = [{
             key: 'networkError',
