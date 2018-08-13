@@ -273,7 +273,7 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
       },
       handleSuccess: (props) => (data) => {
         const { node: record = {} } = data
-        const { setState, state, onSuccess, closeModal, closeModalKey: key } = props
+        const { disablePostSubmitSetState, setState, state, onSuccess, closeModal, closeModalKey: key } = props
         const nextState = {
           ...state,
           form: setInitialForm(record, props), // Either the `node` key or by default: {}
@@ -287,6 +287,9 @@ const withForm = (fields: FieldsType, options: OptionsType = {}) => (Component: 
           message.success(MESSAGE_SAVE_SUCCESS)
           if (onSuccess) onSuccess(record, props, data)
           if (closeModal && key) closeModal({ key })
+        }
+        if (disablePostSubmitSetState) {
+          return setStateCallback()
         }
         setState(nextState, setStateCallback)
       },
