@@ -5,8 +5,14 @@ const withFormCRUD = (model, actions) => (Component) => {
   const defaultVariables = { filter: null, sort: '-createdAt' }
   const variables = { ...defaultVariables, ...actions.variables }
 
+  let mutateOptions = {}
+
+  // Expose mutateOptions
+  if (actions.options) {
+    mutateOptions = { ...mutateOptions, ...actions.options }
+  }
+
   // Add refetch if list query provided
-  const mutateOptions = {}
   if (actions.LIST) {
     const refetchModel = { query: actions.LIST, variables }
     mutateOptions.refetchQueries = [refetchModel]
