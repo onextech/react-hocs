@@ -88,10 +88,11 @@ const withFormComponents = compose(
               required,
               props,
               label,
+              hidden,
               ...rest
             } = fieldProps
             const isInRecord = has(form, path || name) // form must contain this key
-            const show = isInRecord || required // show optional fields only on update
+            const show = isInRecord || required || hidden === false // show optional fields only on update
             const Label = (wrappedLabelProps) => {
               return (
                 <label htmlFor={name} {...wrappedLabelProps}>

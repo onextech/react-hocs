@@ -15,7 +15,7 @@ import {
 const fields = [
   {
     name: 'name',
-    required: true,
+    hidden: false,
   },
   {
     name: 'images',
