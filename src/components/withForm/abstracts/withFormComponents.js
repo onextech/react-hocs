@@ -162,7 +162,7 @@ const withFormComponents = compose(
                   )
                 }
                 case FIELD_CHECKBOX: {
-                  const { hidden, disabled } = rest
+                  const { disabled } = rest
                   return (
                     <Form.Field className={CLASS_FIELD_CHECKBOX} key={key} hidden={hidden} disabled={disabled} required={required}>
                       <Label className={CLASS_LABEL_CHECKBOX} />
